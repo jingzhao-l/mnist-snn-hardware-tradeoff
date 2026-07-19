@@ -167,11 +167,12 @@ def fill_csv(path,
         if col not in fieldnames:
             fieldnames.append(col)
 
-    # 记录本次填充所用的实测值与假设，避免重复添加
+    # 记录本次填充所用的实测值与假设，并清理旧假设行避免累积
     assumption_line = (
         f"# 实测功耗与 ANN 并行度假设："
         f"P_if={p_if}µW, P_mac={p_mac}µW, parallelism={parallelism}（单 MAC 串行基线）"
     )
+    comments = [c for c in comments if not c.startswith("# 实测功耗与 ANN 并行度假设：")]
     if not any(assumption_line in c for c in comments):
         comments.append(assumption_line)
 

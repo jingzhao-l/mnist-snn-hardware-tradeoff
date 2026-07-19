@@ -227,9 +227,9 @@ def write_report(data_based, max_norm, output_path):
 
 ---
 
-## 二、测试平台与功能验证波形
+## 三、测试平台与功能验证波形
 
-### 2.1 测试平台电路图
+### 3.1 测试平台电路图
 
 IF 神经元功耗/功能测试平台：
 
@@ -239,7 +239,7 @@ MAC 单元功耗/功能测试平台：
 
 ![MAC testbench](../报告/figures/MAC_TB.png)
 
-### 2.2 功耗测试波形
+### 3.2 功耗测试波形
 
 IF 神经元在 2MHz 下的功耗测试波形（W=0010, Vth=0110，3 个 SPIKE_IN 脉冲）：
 
@@ -249,7 +249,7 @@ MAC 单元在 2MHz 下的功耗测试波形（A/B 输入翻转）：
 
 ![MAC 2MHz 波形](../报告/figures/MAC（2MHz）波形图.png)
 
-### 2.3 功能验证记录
+### 3.3 功能验证记录
 
 #### DFF
 
@@ -277,9 +277,9 @@ MAC 单元在 2MHz 下的功耗测试波形（A/B 输入翻转）：
 
 ---
 
-## 三、Cadence 实测功耗、延迟与晶体管数
+## 四、Cadence 实测功耗、延迟与晶体管数
 
-### 3.1 测试参数记录
+### 4.1 测试参数记录
 
 #### MAC 功耗 testbench
 
@@ -311,7 +311,7 @@ MAC 每个时钟周期完成一次乘累加，因此**无需额外事件折算**
 | Stop Time | 5.5 µs | 共 11 个时钟周期，3 个有效脉冲事件 |
 | VDD | 1.8 V | 独立 vdc 接 VDD! 与 gnd! |
 
-### 3.2 测量结果
+### 4.2 测量结果
 
 | 指标 | MAC 单元 | IF 神经元 | 备注 |
 |---|---|---|---|
@@ -326,7 +326,7 @@ MAC 每个时钟周期完成一次乘累加，因此**无需额外事件折算**
 > **折算说明**：IF 测试窗口 5.5 µs 内只有 3 个有效脉冲事件，因此把测得的平均功耗按
 > `11 / 3 ≈ {fp.IF_EVENT_CORRECTION_FACTOR:.2f}` 放大，得到“每次脉冲事件”的等效功耗。
 
-### 3.3 面积-延迟-功耗综合对比
+### 4.3 面积-延迟-功耗综合对比
 
 #### 单元级对比
 
@@ -350,7 +350,7 @@ MAC 每个时钟周期完成一次乘累加，因此**无需额外事件折算**
 
 ---
 
-## 四、ANN 参考能耗
+## 五、ANN 参考能耗
 
 网络结构：784 → 300 → 10
 
@@ -362,9 +362,9 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-## 五、SNN 推荐配置（Pareto 前沿）
+## 六、SNN 推荐配置（Pareto 前沿）
 
-### 5.1 data_based 归一化（推荐）
+### 6.1 data_based 归一化（推荐）
 
 {markdown_table(pareto_db)}
 
@@ -372,7 +372,7 @@ ANN 准确率  ≈ 97.0%
 准确率 {best_db['Accuracy(%)']:.1f}%，SNN 能耗为 ANN 的
 {100*best_db['P_SNN_uW']/best_db['P_ANN_uW']:.2f}%。
 
-### 5.2 max_norm 归一化
+### 6.2 max_norm 归一化
 
 {markdown_table(pareto_mn)}
 
@@ -382,7 +382,7 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-## 六、IF 功耗折算前后对比
+## 七、IF 功耗折算前后对比
 
 下表展示 **data_based** 方法下，IF 功耗按实际脉冲事件折算前后的 Pareto 结果差异：
 
@@ -393,7 +393,7 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-## 七、核心结论
+## 八、核心结论
 
 1. **data_based 归一化显著优于 max_norm**：在相近准确率下，data_based 的 SNN 能耗更低。
 2. **SNN 节能来自事件稀疏性**：即使单次 IF 事件功耗高于单次 MAC，SNN 一次推理的脉冲事件数
@@ -418,7 +418,7 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-## 八、关键文件清单
+## 九、关键文件清单
 
 | 文件 | 说明 |
 |---|---|
@@ -435,7 +435,31 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-*报告生成时间：2026-07-18*
+## 十、参考文献与术语说明
+
+### 10.1 参考文献
+
+1. Maass, W. (1997). Networks of spiking neurons: the third generation of neural network models. *Neural Networks*, 10(9), 1659-1671.
+2. Diehl, P. U., & Cook, M. (2015). Unsupervised learning of digit recognition using spike-timing-dependent plasticity. *Frontiers in Computational Neuroscience*, 9, 99.
+3. Rueckauer, B., Lungu, I. A., Hu, Y., Pfeiffer, M., & Liu, S. C. (2017). Conversion of continuous-valued deep networks to efficient event-driven networks for image classification. *Frontiers in Neuroscience*, 11, 682.
+4. Sengupta, A., Ye, Y., Wang, R., Liu, C., & Roy, K. (2019). Going deeper in spiking neural networks: VGG and residual architectures. *Frontiers in Neuroscience*, 13, 95.
+
+### 10.2 术语表
+
+| 术语 | 说明 |
+|---|---|
+| SNN | Spiking Neural Network，脉冲神经网络 |
+| IF 神经元 | Integrate-and-Fire Neuron，积分-发放神经元 |
+| MAC | Multiply-Accumulate，乘累加运算 |
+| PPA | Power-Performance-Area，功耗-性能-面积 |
+| T | 仿真时间步长 |
+| Vth | 神经元发放阈值 |
+| data_based | 基于数据分布的权重归一化方法 |
+| max_norm | 基于最大权重的归一化方法 |
+
+---
+
+*报告生成时间：2026-07-19*
 """
 
     with open(output_path, 'w', encoding='utf-8') as f:

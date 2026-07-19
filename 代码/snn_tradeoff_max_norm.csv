@@ -1,14 +1,10 @@
-# 功耗列使用说明：
-#   P_if_single_uW: 单个 IF 神经元在一个时间步的平均功耗，由 Cadence 仿真测得
-#   P_mac_single_uW: 单个 MAC 单元完成一次乘加运算的平均功耗，由 Cadence 仿真测得
-#   P_SNN_uW: 填入 P_if_single_uW * (N_neurons * T * firing_rate) 后的总功耗估算
-#   P_ANN_uW: 填入 P_mac_single_uW * (MAC_ops / parallelism) 后的总功耗估算
-#   power_saving_percent: (P_ANN_uW - P_SNN_uW) / P_ANN_uW * 100
-# 当前列为占位符，等待后续 Cadence 仿真数据填入。
-# 实测功耗与 ANN 并行度假设：P_if=2.627µW, P_mac=1.072µW, parallelism=1（单 MAC 串行基线）
-# 实测功耗与 ANN 并行度假设：P_if=2.6210492µW, P_mac=1.0661734µW, parallelism=1（单 MAC 串行基线）
-# 实测功耗与 ANN 并行度假设：P_if=9.610513733333333µW, P_mac=1.0661734µW, parallelism=1（单 MAC 串行基线）
-# 实测功耗与 ANN 并行度假设：P_if=9.610513733333333µW, P_mac=4.870173µW, parallelism=1（单 MAC 串行基线）
+# SNN trade-off 数据文件（max_norm 归一化）
+# ANN 参考准确率: 97.0%
+# 功耗模型：P_if_single_uW=9.611µW, P_mac_single_uW=4.870µW, ANN 并行度=1
+# 公式：
+#   P_SNN_uW = P_if_single_uW * (Avg_Spikes_L1 + Avg_Spikes_L2)
+#   P_ANN_uW = P_mac_single_uW * MAC_ops
+#   power_saving_percent = (P_ANN_uW - P_SNN_uW) / P_ANN_uW * 100
 T,Vth,Accuracy(%),Overall_Sparsity(%),Sparsity_L1(%),Sparsity_L2(%),Avg_Spikes_L1,Avg_Spikes_L2,Total_Spikes_L1,Total_Spikes_L2,P_if_single_uW,P_mac_single_uW,P_SNN_uW,P_ANN_uW,power_saving_percent
 5,0.5,39.8,49.03,48.74,57.65,768.9,21.2,384465,10587,9.611,4.870,7593.267,1160075.209,99.35
 10,0.5,42.6,49.68,49.4,57.96,1517.9,42.0,758932,21018,9.611,4.870,14991.440,1160075.209,98.71

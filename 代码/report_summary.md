@@ -192,47 +192,7 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-## 七、节能百分比 vs 准确率下降（本课题核心研究问题）
-
-本课题的最初研究目的是：**量化 SNN 相比 ANN 每节省多少功耗，会损失多少准确率**。下面直接从 Pareto 前沿给出这一 trade-off 的量化表。
-
-### 7.1 Pareto 前沿对比表
-
-| 方法 | T | Vth | 准确率(%) | 节能(%) | 准确率下降(%) | 节能/下降比 | SNN/ANN(%) |
-|---|---|---|---|---|---|---|---|
-| data_based | 50 | 0.50 | 96.8 | 98.68 | 0.20 | 493.4 | 1.316 |
-| data_based | 50 | 0.75 | 96.6 | 98.70 | 0.40 | 246.7 | 1.304 |
-| data_based | 50 | 1.00 | 96.6 | 98.70 | 0.40 | 246.7 | 1.297 |
-| data_based | 50 | 1.50 | 96.4 | 98.71 | 0.60 | 164.5 | 1.288 |
-| data_based | 30 | 1.50 | 96.2 | 99.25 | 0.80 | 124.1 | 0.751 |
-| data_based | 20 | 0.75 | 96.0 | 99.51 | 1.00 | 99.5 | 0.487 |
-| data_based | 20 | 1.50 | 95.4 | 99.52 | 1.60 | 62.2 | 0.481 |
-| data_based | 10 | 0.50 | 94.6 | 99.78 | 2.40 | 41.6 | 0.220 |
-| data_based | 5 | 0.50 | 92.2 | 99.92 | 4.80 | 20.8 | 0.080 |
-| max_norm | 100 | 5.00 | 97.0 | 94.02 | 0.00 | — | 5.985 |
-| max_norm | 50 | 5.00 | 96.8 | 97.02 | 0.20 | 485.1 | 2.976 |
-| max_norm | 30 | 5.00 | 95.8 | 98.23 | 1.20 | 81.9 | 1.769 |
-| max_norm | 10 | 5.00 | 95.6 | 99.43 | 1.40 | 71.0 | 0.567 |
-| max_norm | 5 | 5.00 | 89.6 | 99.74 | 7.40 | 13.5 | 0.261 |
-
-> **节能/下降比**：每损失 1% 准确率所换取的节能百分比。比值越大，说明“为省电付出的代价”越划算。
-
-### 7.2 核心曲线
-
-![data_based 节能 vs 准确率下降](plots/snn_saving_vs_loss_data_based.png)
-
-![双归一化对比](plots/snn_saving_vs_loss_both.png)
-
-### 7.3 从表中直接读出的结论
-
-1. **性价比最高的拐点**：data_based, T=50, Vth=0.5，准确率仅下降 0.2%，即可节能 98.68%，节能/下降比高达 **493.4**。也就是说，每损失 0.1% 准确率就能换来约 49% 的额外节能。
-2. **ROI 明显递减**：从 T=50 降到 T=5，准确率从 96.8% 跌至 92.2%（再降 4.6%），节能仅从 98.68% 提升到 99.92%（仅再省 1.24%）。节能/下降比从 493 骤降到 20.8，说明“最后一点节能”代价极高。
-3. **data_based 全面占优**：在相同准确率下降水平下，data_based 的节能百分比和 SNN/ANN 能耗比均优于 max_norm。
-4. **max_norm 存在异常点**：T=100, Vth=5.0 时准确率没有下降（仍为 97.0%），但只能节能 94.02%，能耗是 ANN 的 5.98%；这说明 max_norm 只有在用较大 T、较高阈值时才能保住准确率，节能空间被压缩。
-
----
-
-## 八、IF 功耗折算前后对比
+## 七、IF 功耗折算前后对比
 
 下表展示 **data_based** 方法下，IF 功耗按实际脉冲事件折算前后的 Pareto 结果差异：
 
@@ -253,112 +213,32 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-## 九、核心结论
+## 八、核心结论
 
 1. **data_based 归一化显著优于 max_norm**：在相近准确率下，data_based 的 SNN 能耗更低。
 2. **SNN 节能来自事件稀疏性**：即使单次 IF 事件功耗高于单次 MAC，SNN 一次推理的脉冲事件数
    （约 1,000–7,000）远少于 ANN 的 MAC 次数（238,200），因此总量上仍节能 94%–99%。
 3. **“节能百分比 vs 准确率下降”曲线存在明显拐点（knee point）**：
    - 从 ANN 切换到 SNN（T=50, Vth=0.5）时，准确率仅下降约 0.2%，即可节能 98.68%，
-     节能/准确率下降比高达 **493.4**，这是**性价比最高的区域**。
+     这是**性价比最高的区域**。
    - 继续压缩到 T=5 虽然能把节能推到 99.92%，但准确率会再下降约 4.8%，
-     节能/准确率下降比骤降至 20.8，属于“为最后一点节能付出过大准确率代价”的区域。
+     属于“为最后一点节能付出过大准确率代价”的区域。
    - 因此，本课题的实用甜点（sweet spot）在 **T=20~50、Vth=0.5~1.5** 之间。
-4. **ROI（节能收益）明显递减**：从拐点往“更高节能”方向移动时，每多省 1% 能耗需要牺牲的准确率越来越大。这说明 SNN 的节能优势在拐点附近已经充分释放，继续降低 T 的边际收益很小。
-5. **归一化方法对 trade-off 影响巨大**：
+4. **归一化方法对 trade-off 影响巨大**：
    - max_norm 在 T=5、Vth=5.0 时准确率会跌至 12.4%，几乎不可用；
    - 而 data_based 在相近节能水平下仍能保持 92.2% 的准确率。
    - 这说明 **“按数据分布缩放权重”是 SNN 转换成功的关键**。
-6. **推荐硬件部署点**（基于全部 Pareto 前沿数据）：
+5. **推荐硬件部署点**（基于全部 Pareto 前沿数据）：
    - 若追求最高准确率：data_based, T=50, Vth=0.50，准确率 96.8%，SNN 能耗为 ANN 的 1.32%，节能 98.68%。
    - 若追求最大节能：data_based, T=5, Vth=0.5，准确率 92.2%，SNN 能耗为 ANN 的 0.08%，节能 99.92%。
    - max_norm 最高准确率：T=100, Vth=5.00，准确率 97.0%，SNN 能耗为 ANN 的 5.98%，节能 94.02%。
-7. **时钟频率必须降至 2MHz**：IF 神经元关键路径延迟约 149 ns，超过 10MHz 的 100 ns 周期。
-8. **结论基于全部 (T, Vth) 扫描数据**：完整数据表见 `full_results_table.md`，核心曲线见
-   `plots/snn_saving_vs_loss_data_based.png` 与 `plots/snn_saving_vs_loss_both.png`，
-   Pareto 前沿从所有 49 组 data_based 和 49 组 max_norm 配置中计算得出。
+6. **时钟频率必须降至 2MHz**：IF 神经元关键路径延迟约 149 ns，超过 10MHz 的 100 ns 周期。
+7. **结论基于全部 (T, Vth) 扫描数据**：完整数据表见 `full_results_table.md`，核心曲线见
+   `plots/snn_saving_vs_loss_data_based.png`，Pareto 前沿从所有 49 组 data_based 和 49 组 max_norm 配置中计算得出。
 
 ---
 
-## 九、面积-延迟-功耗（PPA）综合对比
-
-完整 PPA 分析见 [ppa_comparison_table.md](ppa_comparison_table.md)。
-
-### 9.1 单元级 PPA
-
-| 指标 | MAC 单元 | IF 神经元 | IF / MAC 比值 |
-|---|---|---|---|
-| 晶体管数量 | 942 | 514 | 0.546 |
-| 关键路径延迟 | 50 ns | 149 ns | 2.98 |
-| 有效单次功耗 | 4.870 µW | 9.611 µW | 1.973 |
-| 单次操作能量 | 2.435 pJ | 4.805 pJ | 1.973 |
-| 面积×延迟积（ADP） | 47.1 k transistor·ns | 76.6 k transistor·ns | 1.63 |
-| 能量×延迟积（EDP） | 121.8 pJ·ns | 715.9 pJ·ns | 5.88 |
-
-### 9.2 系统级 PPA（MNIST 784→300→10）
-
-| 系统 | 面积（晶体管） | 延迟 @2MHz | 一次推理能量 | 准确率 |
-|---|---|---|---|---|
-| ANN（串行单 MAC） | 942 | 119.1 ms | 580,000 pJ | 97.0% |
-| SNN T=50, Vth=0.5 | 159,340 | 25.0 µs | 7,634 pJ | 96.8% |
-| SNN T=20, Vth=0.75 | 159,340 | 10.0 µs | 2,826 pJ | 96.0% |
-| SNN T=5, Vth=0.5 | 159,340 | 2.5 µs | 465 pJ | 92.2% |
-
-### 9.3 ANN 并行度推演（与 SNN 公平对比）
-
-| ANN 并行度 | 面积（晶体管） | 延迟 @2MHz | 能量 | 相对 SNN T=50 |
-|---|---|---|---|---|
-| 1 | 942 | 119.1 ms | 580,000 pJ | 延迟 ×4764 |
-| 10 | 9,420 | 11.91 ms | 580,000 pJ | 延迟 ×476 |
-| 100 | 94,200 | 1.191 ms | 580,000 pJ | 延迟 ×47.6 |
-| 310（与 SNN 同面积） | 292,020 | 384.4 µs | 580,000 pJ | 延迟 ×15.4，面积 ×1.83 |
-| 4764（与 SNN 同延迟） | 4,487,688 | 25.0 µs | 580,000 pJ | 面积 ×28.2 |
-
-> **核心洞察**：SNN 以约 169 倍的面积换取约 1/4760 的延迟和约 1/76 的能量；即使 ANN 使用与 SNN 相同的晶体管预算（310 MAC），延迟仍是 SNN 的 15 倍以上。
-
----
-
-## 十、衍生结论与优化方向
-
-详细分析见 [derived_conclusions.md](derived_conclusions.md)。以下为严格基于本项目数据的中立摘要。
-
-### 10.1 数据直接支持的结论
-
-1. **归一化方法决定 trade-off 形态**：在本项目 MNIST 784→300→10 网络上，data_based 全面优于 max_norm。
-2. **T=50 是 data_based 拐点**：T<50 准确率随 T 增加而提升，T>50 准确率反而下降。
-3. **IF 单次功耗约为 MAC 的 2 倍**：SNN 节能只能来自操作次数少（约 150 倍），而非单次操作更省。
-4. **IF 延迟是时钟瓶颈**：149 ns 延迟迫使时钟降到 2MHz。
-5. **同面积 ANN 仍无法追上 SNN 延迟**：310 MAC 全并行 ANN 延迟仍是 SNN T=50 的 15 倍以上。
-
-### 10.2 数据强烈暗示的结论
-
-1. **“零准确率损失”的 SNN 可能存在，但节能空间会缩小**：max_norm T=100, Vth=5.0 已实现 97.0% 准确率，但节能仅 94.02%。
-2. **Vth 最优区间可能很窄**：T=50 时 Vth=0.5（96.8%）略优于 Vth=1.5（96.4%）。
-3. **4-bit 膜电位可能是瓶颈**：T>50 准确率下降，可能与膜电位饱和有关。
-4. **继续增大 T 的收益有限**：T=50 后准确率不再提升，信息容量或已饱和。
-
-### 10.3 需谨慎对待的推测（未在本项目验证）
-
-- 引入 LIF 泄漏、SNN-aware 训练、混合 ANN-SNN、temporal/TTFS 编码、DVS 事件相机、降低电源电压等，均属于领域通用建议，需要后续实验验证。
-
-### 10.4 不能过度推断的结论
-
-- SNN 并非在所有场景下都比 ANN 节能；data_based 并非在所有数据集上都优于 max_norm；T=50 未必是绝对最优（T=60、70 未扫描）。
-
-### 10.5 后续实验建议
-
-| 优先级 | 实验 | 预期可验证的问题 |
-|---|---|---|
-| 高 | 扫描 T=60~150、Vth=0.3~1.0 的 data_based | 是否存在零损失高节能配置 |
-| 高 | 将膜电位位宽提升到 6/8 bit | 4-bit 饱和是否限制准确率 |
-| 中 | 实现 LIF 泄漏项并仿真 | 时间局部性是否影响准确率 |
-| 中 | 优化 IF 延迟 | 能否把时钟提升到 5~10MHz |
-| 中 | 310 MAC 全并行 ANN 完整仿真 | 更公平的 PPA 基线 |
-| 低 | SNN-aware 训练 | 从算法层面减少转换损失 |
-
----
-
-## 十一、关键文件清单
+## 九、关键文件清单
 
 | 文件 | 说明 |
 |---|---|
@@ -366,12 +246,8 @@ ANN 准确率  ≈ 97.0%
 | `snn_tradeoff.py` | (T, Vth) 扫描与 CSV/图表生成 |
 | `fill_power.py` | 用 Cadence 实测功耗填充 CSV |
 | `plot_power_tradeoff.py` | 功耗-准确率 trade-off 可视化 |
-| `plot_saving_vs_loss.py` | 节能百分比 vs 准确率下降核心图 |
 | `count_transistors.py` | 自动统计 CDL 晶体管数量 |
 | `generate_report.py` | 生成本报告 |
-| `saving_loss_table.csv` / `.md` | 节能-准确率下降对比表 |
-| `ppa_comparison_table.md` | 面积-延迟-功耗综合对比表 |
-| `derived_conclusions.md` | 衍生结论与优化方向分析 |
 | `snn_tradeoff_data_based.csv` | data_based 完整数据 |
 | `snn_tradeoff_max_norm.csv` | max_norm 完整数据 |
 | `full_results_table.md` | 全部 (T, Vth) 配置汇总表 |
@@ -379,4 +255,28 @@ ANN 准确率  ≈ 97.0%
 
 ---
 
-*报告生成时间：2026-07-18*
+## 十、参考文献与术语说明
+
+### 10.1 参考文献
+
+1. Maass, W. (1997). Networks of spiking neurons: the third generation of neural network models. *Neural Networks*, 10(9), 1659-1671.
+2. Diehl, P. U., & Cook, M. (2015). Unsupervised learning of digit recognition using spike-timing-dependent plasticity. *Frontiers in Computational Neuroscience*, 9, 99.
+3. Rueckauer, B., Lungu, I. A., Hu, Y., Pfeiffer, M., & Liu, S. C. (2017). Conversion of continuous-valued deep networks to efficient event-driven networks for image classification. *Frontiers in Neuroscience*, 11, 682.
+4. Sengupta, A., Ye, Y., Wang, R., Liu, C., & Roy, K. (2019). Going deeper in spiking neural networks: VGG and residual architectures. *Frontiers in Neuroscience*, 13, 95.
+
+### 10.2 术语表
+
+| 术语 | 说明 |
+|---|---|
+| SNN | Spiking Neural Network，脉冲神经网络 |
+| IF 神经元 | Integrate-and-Fire Neuron，积分-发放神经元 |
+| MAC | Multiply-Accumulate，乘累加运算 |
+| PPA | Power-Performance-Area，功耗-性能-面积 |
+| T | 仿真时间步长 |
+| Vth | 神经元发放阈值 |
+| data_based | 基于数据分布的权重归一化方法 |
+| max_norm | 基于最大权重的归一化方法 |
+
+---
+
+*报告生成时间：2026-07-19*
