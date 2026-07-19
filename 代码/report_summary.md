@@ -27,21 +27,21 @@
 
 IF 神经元功耗/功能测试平台：
 
-![IF testbench](../报告/IF_TB.png)
+![IF testbench](../报告/figures/IF_TB.png)
 
 MAC 单元功耗/功能测试平台：
 
-![MAC testbench](../报告/MAC_TB.png)
+![MAC testbench](../报告/figures/MAC_TB.png)
 
 ### 2.2 功耗测试波形
 
 IF 神经元在 2MHz 下的功耗测试波形（W=0010, Vth=0110，3 个 SPIKE_IN 脉冲）：
 
-![IF 2MHz 波形](../报告/IF（2MHz）波形图.png)
+![IF 2MHz 波形](../报告/figures/IF（2MHz）波形图.png)
 
 MAC 单元在 2MHz 下的功耗测试波形（A/B 输入翻转）：
 
-![MAC 2MHz 波形](../报告/MAC（2MHz）波形图.png)
+![MAC 2MHz 波形](../报告/figures/MAC（2MHz）波形图.png)
 
 ### 2.3 功能验证记录
 

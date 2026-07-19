@@ -218,8 +218,8 @@ def md_to_docx(md_path, docx_path):
 
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    md_path = os.path.join(base_dir, '..', '报告', '结题报告.md')
-    docx_path = os.path.join(base_dir, '..', '报告', '结题报告.docx')
+    md_path = os.path.join(base_dir, '..', '报告', 'final', '结题报告.md')
+    docx_path = os.path.join(base_dir, '..', '报告', 'final', '结题报告.docx')
 
     if not os.path.exists(md_path):
         print(f'[错误] 找不到 Markdown 文件: {md_path}')

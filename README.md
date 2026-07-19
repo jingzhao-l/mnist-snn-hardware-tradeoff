@@ -17,8 +17,13 @@
 ```
 .
 ├── 代码/              # Python 分析脚本与 CSV 数据
-├── 报告/              # CDL 网表、Testbench 截图、波形图
-├── 设计/              # 设计文档、Cadence 网表与搭建指南
+│   └── plots/         # 自动生成的 trade-off 图表
+├── 报告/              # 报告、网表与测试截图
+│   ├── final/         # 结题报告（Markdown + DOCX）
+│   ├── figures/       # Testbench 电路图与仿真波形
+│   ├── netlists/      # 最终 CDL 网表
+│   └── proposal/      # 开题报告相关材料
+├── 设计/              # 设计文档与自学材料
 └── README.md          # 本文件
 ```
 
@@ -47,12 +52,12 @@
 | `代码/plot_saving_vs_loss.py` | 生成节能-准确率下降核心图 |
 | `代码/snn_tradeoff_data_based.csv` | data_based 归一化完整扫描数据 |
 | `代码/snn_tradeoff_max_norm.csv` | max_norm 归一化完整扫描数据 |
-| `报告/IF_final.cdl` | 最终 IF 神经元 CDL 网表 |
-| `报告/MAC_final.cdl` | 最终 MAC 单元 CDL 网表 |
+| `报告/netlists/IF_final.cdl` | 最终 IF 神经元 CDL 网表 |
+| `报告/netlists/MAC_final.cdl` | 最终 MAC 单元 CDL 网表 |
 
 ## 如何复现
 
-1. **硬件仿真**：在 Cadence Virtuoso 中导入 `报告/IF_final.cdl` 和 `报告/MAC_final.cdl`，搭建 Testbench 进行功耗、延迟与功能验证。
+1. **硬件仿真**：在 Cadence Virtuoso 中导入 `报告/netlists/IF_final.cdl` 和 `报告/netlists/MAC_final.cdl`，搭建 Testbench 进行功耗、延迟与功能验证。
 2. **数据分析**：
    ```bash
    cd 代码
