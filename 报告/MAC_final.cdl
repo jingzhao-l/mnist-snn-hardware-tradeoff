@@ -1,0 +1,317 @@
+************************************************************************
+* auCdl Netlist:
+* 
+* Library Name:  WorkStation
+* Top Cell Name: MAC
+* View Name:     schematic
+* Netlisted on:  Jul 19 10:17:02 2026
+************************************************************************
+
+*.BIPOLAR
+*.RESI = 2000 
+*.RESVAL
+*.CAPVAL
+*.DIOPERI
+*.DIOAREA
+*.EQUATION
+*.SCALE METER
+*.MEGA
+.PARAM
+
+*.GLOBAL VDD!
++        gnd!
+
+*.PIN VDD!
+*+    gnd!
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    INV
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT INV VDD! gnd! input output
+*.PININFO input:I output:O VDD!:B gnd!:B
+MPM0 output input VDD! VDD! p18 W=1u L=180n m=1
+MNM0 output input gnd! gnd! n18 W=500n L=180n m=1
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    NAND2
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT NAND2 A B VDD! gnd! output
+*.PININFO A:I B:I output:O VDD!:B gnd!:B
+MNM1 net1 B gnd! gnd! n18 W=2u L=180n m=1
+MNM0 output A net1 net1 n18 W=2u L=180n m=1
+MPM1 output B VDD! VDD! p18 W=1u L=180n m=1
+MPM0 output A VDD! VDD! p18 W=1u L=180n m=1
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    AND2
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT AND2 A B VDD! gnd! output
+*.PININFO A:I B:I output:O VDD!:B gnd!:B
+XI0 VDD! gnd! net1 output / INV
+XI1 A B VDD! gnd! net1 / NAND2
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    TG
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT TG C C_N VDD! gnd! input output
+*.PININFO C:I C_N:I input:I output:O VDD!:B gnd!:B
+MNM0 input C_N output gnd! n18 W=500n L=180n m=1
+MPM0 input C output VDD! p18 W=1u L=180n m=1
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    XNOR2
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT XNOR2 A B VDD! XNOR_OUT gnd!
+*.PININFO A:I B:I XNOR_OUT:O VDD!:B gnd!:B
+XI4 VDD! gnd! net3 XNOR_OUT / INV
+XI1 VDD! gnd! B net2 / INV
+XI0 VDD! gnd! A net4 / INV
+XI3 net4 A VDD! gnd! net2 net3 / TG
+XI2 A net4 VDD! gnd! B net3 / TG
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    XOR2
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT XOR2 A B VDD! gnd! output
+*.PININFO A:I B:I output:O VDD!:B gnd!:B
+XI0 A B VDD! net1 gnd! / XNOR2
+XI1 VDD! gnd! net1 output / INV
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    HA
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT HA A B COUT SUM VDD! gnd!
+*.PININFO A:I B:I COUT:O SUM:O VDD!:B gnd!:B
+XI0 A B VDD! gnd! COUT / AND2
+XI3 A B VDD! gnd! SUM / XOR2
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    NOR2
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT NOR2 A B VDD! gnd! output
+*.PININFO A:I B:I output:O VDD!:B gnd!:B
+MNM1 output B gnd! gnd! n18 W=500n L=180n m=1
+MNM0 output A gnd! gnd! n18 W=500n L=180n m=1
+MPM1 output B net1 net1 p18 W=2u L=180n m=1
+MPM0 net1 A VDD! VDD! p18 W=2u L=180n m=1
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    OR2
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT OR2 A B VDD! gnd! output
+*.PININFO A:I B:I output:O VDD!:B gnd!:B
+XI0 A B VDD! gnd! net1 / NOR2
+XI1 VDD! gnd! net1 output / INV
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    FA
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT FA A B CIN COUT SUM VDD! gnd!
+*.PININFO A:I B:I CIN:I COUT:O SUM:O VDD!:B gnd!:B
+XI6 A B VDD! gnd! net6 / XOR2
+XI5 net6 CIN VDD! gnd! SUM / XOR2
+XI3 net6 CIN VDD! gnd! net3 / AND2
+XI2 A B VDD! gnd! net2 / AND2
+XI4 net2 net3 VDD! gnd! COUT / OR2
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    ARRAY_MULT_4*4
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT ARRAY_MULT_4*4 A0 A1 A2 A3 B0 B1 B2 B3 VDD! Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7 
++ gnd!
+*.PININFO A0:I A1:I A2:I A3:I B0:I B1:I B2:I B3:I Y0:O Y1:O Y2:O Y3:O Y4:O 
+*.PININFO Y5:O Y6:O Y7:O VDD!:B gnd!:B
+XI30 C6 VDD! VDD! gnd! Y7 / AND2
+XI16 net4 VDD! VDD! gnd! Y0 / AND2
+XI15 A3 B0 VDD! gnd! net16 / AND2
+XI14 A3 B1 VDD! gnd! net15 / AND2
+XI13 A3 B2 VDD! gnd! net14 / AND2
+XI12 A3 B3 VDD! gnd! net13 / AND2
+XI11 A2 B0 VDD! gnd! net12 / AND2
+XI10 A2 B1 VDD! gnd! net11 / AND2
+XI9 A2 B2 VDD! gnd! net10 / AND2
+XI8 A2 B3 VDD! gnd! net9 / AND2
+XI7 A1 B0 VDD! gnd! net8 / AND2
+XI6 A1 B1 VDD! gnd! net7 / AND2
+XI5 A1 B2 VDD! gnd! net6 / AND2
+XI4 A1 B3 VDD! gnd! net5 / AND2
+XI3 A0 B0 VDD! gnd! net4 / AND2
+XI2 A0 B1 VDD! gnd! net3 / AND2
+XI1 A0 B2 VDD! gnd! net2 / AND2
+XI0 A0 B3 VDD! gnd! net1 / AND2
+XI26 net23 C3C C4C Y4 VDD! gnd! / HA
+XI23 S3A S3B C3C Y3 VDD! gnd! / HA
+XI20 S2_COL2 net2 C_DUMMY2 Y2 VDD! gnd! / HA
+XI18 net3 net8 net20 Y1 VDD! gnd! / HA
+XI29 net13 net19 net22 C6 Y6 VDD! gnd! / FA
+XI28 net21 net17 C4C net22 Y5 VDD! gnd! / FA
+XI27 net9 net14 C4A net19 net21 VDD! gnd! / FA
+XI25 net18 net15 C3B net17 net23 VDD! gnd! / FA
+XI24 net5 net10 C3A C4A net18 VDD! gnd! / FA
+XI22 net1 net16 C_DUMMY2 C3B S3B VDD! gnd! / FA
+XI21 net11 net6 C2_COL2 C3A S3A VDD! gnd! / FA
+XI19 net7 net12 net20 C2_COL2 S2_COL2 VDD! gnd! / FA
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    CLA4
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT CLA4 A0 A1 A2 A3 B0 B1 B2 B3 CIN COUT S0 S1 S2 S3 VDD! gnd!
+*.PININFO A0:I A1:I A2:I A3:I B0:I B1:I B2:I B3:I CIN:I COUT:O S0:O S1:O S2:O 
+*.PININFO S3:O VDD!:B gnd!:B
+XI33 net9 CIN VDD! gnd! net17 / AND2
+XI32 net8 net7 VDD! gnd! net9 / AND2
+XI31 net5 net6 VDD! gnd! net8 / AND2
+XI30 net3 net4 VDD! gnd! net5 / AND2
+XI29 net1 net2 VDD! gnd! net15 / AND2
+XI28 net30 net6 VDD! gnd! net1 / AND2
+XI27 net3 net4 VDD! gnd! net30 / AND2
+XI26 net29 net18 VDD! gnd! net13 / AND2
+XI25 net3 net4 VDD! gnd! net29 / AND2
+XI24 net3 net23 VDD! gnd! net10 / AND2
+XI20 net21 CIN VDD! gnd! net27 / AND2
+XI19 net20 net7 VDD! gnd! net21 / AND2
+XI18 net4 net6 VDD! gnd! net20 / AND2
+XI17 net19 net2 VDD! gnd! net25 / AND2
+XI16 net4 net6 VDD! gnd! net19 / AND2
+XI15 net4 net18 VDD! gnd! net22 / AND2
+XI12 net33 CIN VDD! gnd! net34 / AND2
+XI11 net6 net7 VDD! gnd! net33 / AND2
+XI10 net6 net2 VDD! gnd! net32 / AND2
+XI8 net7 CIN VDD! gnd! net31 / AND2
+XI3 A2 B2 VDD! gnd! net23 / AND2
+XI2 A1 B1 VDD! gnd! net18 / AND2
+XI1 A3 B3 VDD! gnd! net11 / AND2
+XI0 A0 B0 VDD! gnd! net2 / AND2
+XI43 net3 net28 VDD! gnd! S3 / XOR2
+XI42 net4 C2 VDD! gnd! S2 / XOR2
+XI39 net6 C1 VDD! gnd! S1 / XOR2
+XI40 net7 CIN VDD! gnd! S0 / XOR2
+XI7 A3 B3 VDD! gnd! net3 / XOR2
+XI6 A2 B2 VDD! gnd! net4 / XOR2
+XI5 A1 B1 VDD! gnd! net6 / XOR2
+XI4 A0 B0 VDD! gnd! net7 / XOR2
+XI37 net16 net17 VDD! gnd! COUT / OR2
+XI36 net14 net15 VDD! gnd! net16 / OR2
+XI35 net12 net13 VDD! gnd! net14 / OR2
+XI34 net11 net10 VDD! gnd! net12 / OR2
+XI23 net26 net27 VDD! gnd! net28 / OR2
+XI22 net24 net25 VDD! gnd! net26 / OR2
+XI21 net23 net22 VDD! gnd! net24 / OR2
+XI14 net35 net34 VDD! gnd! C2 / OR2
+XI13 net18 net32 VDD! gnd! net35 / OR2
+XI9 net2 net31 VDD! gnd! C1 / OR2
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    DFF
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT DFF CLK D Q Q_N VDD! gnd!
+*.PININFO CLK:I D:I Q:O Q_N:O VDD!:B gnd!:B
+XI3 CLK net4 VDD! gnd! net6 net8 / TG
+XI2 net4 CLK VDD! gnd! net7 net8 / TG
+XI1 net4 CLK VDD! gnd! net1 net7 / TG
+XI0 CLK net4 VDD! gnd! D net7 / TG
+XI10 VDD! gnd! Q Q_N / INV
+XI9 VDD! gnd! net14 Q / INV
+XI8 VDD! gnd! CLK net4 / INV
+XI7 VDD! gnd! net11 net1 / INV
+XI6 VDD! gnd! net14 net6 / INV
+XI5 VDD! gnd! net8 net14 / INV
+XI4 VDD! gnd! net7 net11 / INV
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    DFF_CLR
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT DFF_CLR CLK CLR D Q Q_N VDD! gnd!
+*.PININFO CLK:I CLR:I D:I Q:O Q_N:O VDD!:B gnd!:B
+XI0 CLK net2 Q Q_N VDD! gnd! / DFF
+XI1 D net1 VDD! gnd! net2 / AND2
+XI2 VDD! gnd! CLR net1 / INV
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    REG4
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT REG4 CLK CLR D[0] D[1] D[2] D[3] Q[0] Q[1] Q[2] Q[3] VDD! gnd!
+*.PININFO CLK:I CLR:I D[0]:I D[1]:I D[2]:I D[3]:I Q[0]:O Q[1]:O Q[2]:O Q[3]:O 
+*.PININFO VDD!:B gnd!:B
+XI3 CLK CLR D[3] Q[3] net4 VDD! gnd! / DFF_CLR
+XI2 CLK CLR D[2] Q[2] net3 VDD! gnd! / DFF_CLR
+XI1 CLK CLR D[1] Q[1] net2 VDD! gnd! / DFF_CLR
+XI0 CLK CLR D[0] Q[0] net1 VDD! gnd! / DFF_CLR
+.ENDS
+
+************************************************************************
+* Library Name: WorkStation
+* Cell Name:    MAC
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT MAC A0 A1 A2 A3 ACC0 ACC1 ACC2 ACC3 B0 B1 B2 B3 CLK CLR COUT VDD! gnd!
+*.PININFO A0:I A1:I A2:I A3:I B0:I B1:I B2:I B3:I CLK:I CLR:I ACC0:O ACC1:O 
+*.PININFO ACC2:O ACC3:O COUT:O VDD!:B gnd!:B
+XI0 A0 A1 A2 A3 B0 B1 B2 B3 VDD! net1 net2 net3 net4 net13 net12 net11 net10 
++ gnd! / ARRAY_MULT_4*4
+XI1 net1 net2 net3 net4 ACC0 ACC1 ACC2 ACC3 gnd! net9 net5 net6 net7 net8 VDD! 
++ gnd! / CLA4
+XI2 CLK CLR net5 net6 net7 net8 ACC0 ACC1 ACC2 ACC3 VDD! gnd! / REG4
+XI3 net9 gnd! VDD! gnd! COUT / OR2
+.ENDS
+
