@@ -615,8 +615,10 @@ def main():
 
     # ---- 路径配置 ----
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    weight_path = os.path.join(base_dir, "ann_mnist_weights_relu.npz")
-    output_path = os.path.join(base_dir, "snn_results.npz")
+    data_dir = os.path.join(base_dir, "data")
+    os.makedirs(data_dir, exist_ok=True)
+    weight_path = os.path.join(data_dir, "ann_mnist_weights_relu.npz")
+    output_path = os.path.join(data_dir, "snn_results.npz")
 
     # ---- 命令行参数解析 ----
     # 用法: python snn_conversion.py [max_norm|data_based] [T] [Vth] [max_samples]

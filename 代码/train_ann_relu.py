@@ -203,10 +203,14 @@ print(f"最终测试准确率: {final_acc*100:.2f}%")
 print(f"{'='*60}")
 
 # 保存权重 (供 ANN-to-SNN 转换使用)
-np.savez('ann_mnist_weights_relu.npz',
+base_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(base_dir, 'data')
+os.makedirs(data_dir, exist_ok=True)
+weight_path = os.path.join(data_dir, 'ann_mnist_weights_relu.npz')
+np.savez(weight_path,
          W1=mlp.W1, b1=mlp.b1,
          W2=mlp.W2, b2=mlp.b2)
-print("权重已保存到 ann_mnist_weights_relu.npz")
+print(f"权重已保存到 {weight_path}")
 
 
 # ============================================================
@@ -230,6 +234,9 @@ axes[1].legend()
 axes[1].grid(True)
 
 plt.tight_layout()
-plt.savefig('training_loss_relu.png', dpi=150)
-print("训练曲线图已保存到 training_loss_relu.png")
+plots_dir = os.path.join(base_dir, 'plots')
+os.makedirs(plots_dir, exist_ok=True)
+loss_plot_path = os.path.join(plots_dir, 'training_loss_relu.png')
+plt.savefig(loss_plot_path, dpi=150)
+print(f"训练曲线图已保存到 {loss_plot_path}")
 plt.show()

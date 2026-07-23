@@ -3,9 +3,9 @@
 generate_report.py — 生成本项目的结题报告汇总
 ===============================================
 读取两个 trade-off CSV，提取 Pareto 前沿，生成：
-  1. report_summary.md — 可直接写入论文/结题报告的中文汇总
-  2. pareto_summary.csv — Pareto 配置表
-  3. snn_tradeoff_comparison.png — data_based 与 max_norm 同图对比
+  1. tables/report_summary.md — 可直接写入论文/结题报告的中文汇总
+  2. tables/pareto_summary.csv — Pareto 配置表
+  3. plots/snn_tradeoff_comparison.png — data_based 与 max_norm 同图对比
 """
 
 import csv
@@ -413,7 +413,7 @@ ANN 准确率  ≈ 97.0%
    - 若追求最大节能：data_based, T=5, Vth=0.5，准确率 92.2%，SNN 能耗为 ANN 的 0.08%，节能 99.92%。
    - max_norm 最高准确率：T={int(best_mn['T'])}, Vth={best_mn['Vth']:.2f}，准确率 {best_mn['Accuracy(%)']:.1f}%，SNN 能耗为 ANN 的 {100*best_mn['P_SNN_uW']/best_mn['P_ANN_uW']:.2f}%，节能 {best_mn['power_saving_percent']:.2f}%。
 6. **时钟频率必须降至 2MHz**：IF 神经元关键路径延迟约 149 ns，超过 10MHz 的 100 ns 周期。
-7. **结论基于全部 (T, Vth) 扫描数据**：完整数据表见 `full_results_table.md`，核心曲线见
+7. **结论基于全部 (T, Vth) 扫描数据**：完整数据表见 `tables/full_results_table.md`，核心曲线见
    `plots/snn_saving_vs_loss_data_based.png`，Pareto 前沿从所有 49 组 data_based 和 49 组 max_norm 配置中计算得出。
 
 ---
@@ -424,13 +424,19 @@ ANN 准确率  ≈ 97.0%
 |---|---|
 | `snn_conversion.py` | ANN-to-SNN 转换与 IF 神经元仿真 |
 | `snn_tradeoff.py` | (T, Vth) 扫描与 CSV/图表生成 |
+| `train_ann_relu.py` | ANN 训练脚本 |
 | `fill_power.py` | 用 Cadence 实测功耗填充 CSV |
 | `plot_power_tradeoff.py` | 功耗-准确率 trade-off 可视化 |
+| `plot_saving_vs_loss.py` | 节能-准确率下降核心图生成 |
+| `generate_full_table.py` | 完整数据 Markdown 表生成 |
 | `count_transistors.py` | 自动统计 CDL 晶体管数量 |
 | `generate_report.py` | 生成本报告 |
-| `snn_tradeoff_data_based.csv` | data_based 完整数据 |
-| `snn_tradeoff_max_norm.csv` | max_norm 完整数据 |
-| `full_results_table.md` | 全部 (T, Vth) 配置汇总表 |
+| `data/snn_tradeoff_data_based.csv` | data_based 完整数据 |
+| `data/snn_tradeoff_max_norm.csv` | max_norm 完整数据 |
+| `data/ann_mnist_weights_relu.npz` | ANN 训练权重 |
+| `tables/full_results_table.md` | 全部 (T, Vth) 配置汇总表 |
+| `tables/pareto_summary.csv` | Pareto 前沿配置表 |
+| `tables/saving_loss_table.md` | 节能-准确率下降对照表 |
 | `plots/*.png` | 全部 trade-off 图表 |
 
 ---
@@ -469,15 +475,21 @@ ANN 准确率  ≈ 97.0%
 
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    data_based_path = os.path.join(base_dir, 'snn_tradeoff_data_based.csv')
-    max_norm_path = os.path.join(base_dir, 'snn_tradeoff_max_norm.csv')
+    data_dir = os.path.join(base_dir, 'data')
+    tables_dir = os.path.join(base_dir, 'tables')
+    plots_dir = os.path.join(base_dir, 'plots')
+    os.makedirs(tables_dir, exist_ok=True)
+    os.makedirs(plots_dir, exist_ok=True)
+
+    data_based_path = os.path.join(data_dir, 'snn_tradeoff_data_based.csv')
+    max_norm_path = os.path.join(data_dir, 'snn_tradeoff_max_norm.csv')
 
     data_based = read_csv(data_based_path)
     max_norm = read_csv(max_norm_path)
 
-    output_csv = os.path.join(base_dir, 'pareto_summary.csv')
-    output_md = os.path.join(base_dir, 'report_summary.md')
-    output_png = os.path.join(base_dir, 'plots', 'snn_tradeoff_comparison.png')
+    output_csv = os.path.join(tables_dir, 'pareto_summary.csv')
+    output_md = os.path.join(tables_dir, 'report_summary.md')
+    output_png = os.path.join(plots_dir, 'snn_tradeoff_comparison.png')
 
     pareto_data = {'data_based': get_pareto(data_based),
                    'max_norm': get_pareto(max_norm)}

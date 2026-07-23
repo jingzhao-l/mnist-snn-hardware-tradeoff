@@ -524,8 +524,8 @@ def process_one_csv(csv_path, output_dir):
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     csv_files = [
-        os.path.join(base_dir, 'snn_tradeoff_data_based.csv'),
-        os.path.join(base_dir, 'snn_tradeoff_max_norm.csv'),
+        os.path.join(base_dir, 'data', 'snn_tradeoff_data_based.csv'),
+        os.path.join(base_dir, 'data', 'snn_tradeoff_max_norm.csv'),
     ]
     output_dir = os.path.join(base_dir, 'plots')
 

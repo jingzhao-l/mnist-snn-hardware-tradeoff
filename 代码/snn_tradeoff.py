@@ -453,8 +453,11 @@ def main():
 
     # ---- 路径配置 ----
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    weight_path = os.path.join(base_dir, "ann_mnist_weights_relu.npz")
-    output_dir = base_dir
+    data_dir = os.path.join(base_dir, "data")
+    plots_dir = os.path.join(base_dir, "plots")
+    os.makedirs(data_dir, exist_ok=True)
+    os.makedirs(plots_dir, exist_ok=True)
+    weight_path = os.path.join(data_dir, "ann_mnist_weights_relu.npz")
 
     # ---- 扫描参数配置 ----
     # 命令行参数：python snn_tradeoff.py [norm_method] [max_samples]
@@ -512,18 +515,18 @@ def main():
     # ---- 可视化 ----
     print("\n[可视化] 正在生成图表...")
     plot_tradeoff_results(
-        results, output_dir,
+        results, plots_dir,
         norm_method=norm_method,
         T_values=T_values,
         Vth_values=Vth_values,
     )
 
     # ---- 保存 CSV ----
-    csv_path = os.path.join(output_dir, f'snn_tradeoff_{norm_method}.csv')
+    csv_path = os.path.join(data_dir, f'snn_tradeoff_{norm_method}.csv')
     save_results_csv(results, csv_path)
 
     # ---- 保存完整结果（供后续分析） ----
-    npz_path = os.path.join(output_dir, f'snn_tradeoff_{norm_method}.npz')
+    npz_path = os.path.join(data_dir, f'snn_tradeoff_{norm_method}.npz')
     # 将结果转为可保存的数组
     save_dict = {}
     for key in results[0].keys():
@@ -536,9 +539,9 @@ def main():
 
     print(f"\n{'='*60}")
     print(f"  Trade-off 分析完成!")
-    print(f"  图表: {output_dir}/snn_accuracy_vs_T.png")
-    print(f"  图表: {output_dir}/snn_sparsity_vs_T.png")
-    print(f"  图表: {output_dir}/snn_pareto_frontier.png")
+    print(f"  图表: {plots_dir}/snn_accuracy_vs_T.png")
+    print(f"  图表: {plots_dir}/snn_sparsity_vs_T.png")
+    print(f"  图表: {plots_dir}/snn_pareto_frontier.png")
     print(f"  数据: {csv_path}")
     print(f"{'='*60}\n")
 

@@ -32,9 +32,12 @@ def csv_to_md(csv_path, title):
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    data_based_csv = os.path.join(base_dir, "snn_tradeoff_data_based.csv")
-    max_norm_csv = os.path.join(base_dir, "snn_tradeoff_max_norm.csv")
-    output_md = os.path.join(base_dir, "full_results_table.md")
+    data_dir = os.path.join(base_dir, "data")
+    tables_dir = os.path.join(base_dir, "tables")
+    os.makedirs(tables_dir, exist_ok=True)
+    data_based_csv = os.path.join(data_dir, "snn_tradeoff_data_based.csv")
+    max_norm_csv = os.path.join(data_dir, "snn_tradeoff_max_norm.csv")
+    output_md = os.path.join(tables_dir, "full_results_table.md")
 
     content = "# SNN-ANN Trade-off 完整数据表\n\n"
     content += "> 功耗模型：P_if = 9.611 µW（已按 11 周期 / 3 事件折算），P_mac = 4.870 µW（A/B 输入翻转），ANN 并行度 = 1。\n\n"

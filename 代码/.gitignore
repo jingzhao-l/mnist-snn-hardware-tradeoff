@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# macOS
+.DS_Store
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data artifacts that should not be committed twice
+# (CSV/NPZ 是本项目结果数据，保留；此处仅忽略临时文件)
+*.tmp
+*.log

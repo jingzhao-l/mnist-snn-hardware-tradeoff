@@ -65,8 +65,8 @@ F_CLK_MHZ = 2.0
 PARALLELISM = 1
 
 CSV_FILES = [
-    "snn_tradeoff_max_norm.csv",
-    "snn_tradeoff_data_based.csv",
+    "data/snn_tradeoff_max_norm.csv",
+    "data/snn_tradeoff_data_based.csv",
 ]
 
 

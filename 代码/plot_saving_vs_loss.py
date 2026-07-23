@@ -284,8 +284,12 @@ def write_table(records, csv_path, md_path):
 
 
 def main():
-    data_based = read_csv(os.path.join(BASE_DIR, 'snn_tradeoff_data_based.csv'))
-    max_norm = read_csv(os.path.join(BASE_DIR, 'snn_tradeoff_max_norm.csv'))
+    data_dir = os.path.join(BASE_DIR, 'data')
+    tables_dir = os.path.join(BASE_DIR, 'tables')
+    os.makedirs(tables_dir, exist_ok=True)
+
+    data_based = read_csv(os.path.join(data_dir, 'snn_tradeoff_data_based.csv'))
+    max_norm = read_csv(os.path.join(data_dir, 'snn_tradeoff_max_norm.csv'))
 
     plot_data_based(
         data_based,
@@ -302,8 +306,8 @@ def main():
 
     write_table(
         records,
-        os.path.join(BASE_DIR, 'saving_loss_table.csv'),
-        os.path.join(BASE_DIR, 'saving_loss_table.md')
+        os.path.join(tables_dir, 'saving_loss_table.csv'),
+        os.path.join(tables_dir, 'saving_loss_table.md')
     )
 
 
