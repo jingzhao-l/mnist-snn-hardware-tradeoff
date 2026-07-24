@@ -15,5 +15,4 @@ __pycache__/
 # Large media and presentation files (not needed in repo)
 *.mp4
 *.pptx
-!报告/defense/*.pptx
 报告/proposal/开题报告PPT文字稿.docx
