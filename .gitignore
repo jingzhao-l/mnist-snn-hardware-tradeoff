@@ -16,3 +16,18 @@ __pycache__/
 *.mp4
 *.pptx
 报告/proposal/开题报告PPT文字稿.docx
+
+# 个人材料（含身份信息，仅保留本地，不上传仓库）
+导出材料/
+报告/defense/
+报告/final/
+报告/midterm/
+报告/proposal/
+结题报告文件及附件/
+结题报告文件及附件.zip
+代码/apply_proposal_template.py
+代码/apply_proposal_template_v2.py
+代码/generate_defense_from_proposal.py
+代码/generate_defense_ppt.py
+代码/regenerate_defense_ppt.py
+设计/自学教学文档.docx
